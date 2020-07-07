@@ -101,8 +101,10 @@
 //!
 //! But such a type requires cloning the strings. It would be better to have
 //!
-//! ``` ignore
+//! ``` 
+//! # trait Foo { type RelevantPart; } impl<'a> Foo for &'a () {
 //! type RelevantPart = (&'a str, &'a str);
+//! # }
 //! ```
 //!
 //! but our trait doesn't have the `'a` parameter. And if it had it 
