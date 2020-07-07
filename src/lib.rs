@@ -11,15 +11,15 @@
 //! [`Slice`](struct.Slice.html) and [`Pair`](struct.Pair.html) 
 //! that allow the following conversions:
 //!
-//! * `&'a [&'x T] -> &'a Slice<T>` (and a mutable equivalent)
-//! * `&'a (&'x A, &'x B) -> &'a Pair<A, B>` (and a mutable equivalent)
+//! * [`&'a [&'x T] -> &'a Slice<T>`](struct.Slice.html#method.new) (and a mutable equivalent)
+//! * [`&'a (&'x A, &'x B) -> &'a Pair<A, B>`](struct.Pair.html#method.new) (and a mutable equivalent)
 //!
 //! Moreover, each of these types provides `.as_ref()` and `.as_mut()` 
 //! methods (with signatures different from the ones used by the `AsRef` and 
 //! `AsMut` traits) implementing the forward distributive law:
 //!
-//! * `&'a Slice<T> -> &'a [&'a T]` (and a mutable equivalent)
-//! * `&'a Pair<A, B> -> &'a (&'a A, &'a B)` (and a mutable equivalent)
+//! * [`&'a Slice<T> -> &'a [&'a T]`](struct.Slice.html#method.as_ref) (and a mutable equivalent)
+//! * [`&'a Pair<A, B> -> &'a (&'a A, &'a B)`](struct.Pair.html#method.as_ref) (and a mutable equivalent)
 //!
 // //! Also there is a macro `declare_named_tuple!` that introduces 
 // //! a user-defined helper type which allows to name 
@@ -33,7 +33,7 @@
 //!
 //! ### Preliminaries
 //!
-//! Suppose you have a following trait:
+//! Suppose you have the following trait:
 //!
 //! ```
 //! trait Info {
@@ -123,10 +123,10 @@
 //! # struct Configuration { fields: HashMap<String, String> }
 //! fn make_error_string() -> String { unimplemented!() }
 //!
-//! use multiref::Pair;
+//! use multiref::Pair; // a wrapper around (&'a A, &'a B)
 //!
 //! impl Info for Configuration {
-//!     type RelevantPart = Pair<str, str>;
+//!     type RelevantPart = Pair<str, str>; // now this type supports any lifetime
 //!     
 //!     fn info<E, Info>(&self, extractor: E) -> Info where
 //!         E: FnOnce(&Pair<str,str>) -> Info 
@@ -145,6 +145,7 @@
 //!         };
 //!
 //!         extractor( (&(foo, bar)).into() )
+//!         // Pair::new(&(foo, bar)) also can be used
 //!     }
 //! }
 //! ```
