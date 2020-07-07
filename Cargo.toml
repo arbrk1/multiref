@@ -1,0 +1,15 @@
+[package]
+name = "multiref"
+version = "0.1.0"
+authors = ["arbrk1 <arbrk1@gmail.com>"]
+edition = "2018"
+description = "Multireferences: a safe way to do [&T] -> &[T]"
+readme = "README.md"
+repository = "https://github.com/arbrk1/multiref/"
+license = "MIT"
+keywords = ["library", "reference", "smart-pointer", "distributive-law"]
+categories = ["data-structures", "rust-patterns", "no-std"] 
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
