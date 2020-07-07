@@ -1,6 +1,6 @@
 //! # Multireferences (aka _the inverse distributive law_)
 //!
-//! Ever wanted to get `&[T]` from `[&T]`?
+//! Ever wanted to get `&[T]` from `[&T]` without cloning anything?
 //!
 //! Semantically, it doesn't make sense (because a slice wraps a block of 
 //! _contiguous_ elements). But sometimes it's very convenient to be 
@@ -8,7 +8,7 @@
 //! from a bunch of references.
 //!
 //! This crate provides two helper types 
-//! `Slice` and [`Pair`](struct.Pair.html) 
+//! [`Slice`](struct.Slice.html) and [`Pair`](struct.Pair.html) 
 //! that allow the following conversions:
 //!
 //! * `&'a [&'x T] -> &'a Slice<T>` (and a mutable equivalent)
