@@ -6,6 +6,28 @@
 /// of (possibly mutable) references by means of the `From` trait or 
 /// with the help of [`new`](#method.new) and [`new_mut`](#method.new_mut) 
 /// functions.
+///
+/// Pairs can be combined to form longer tuples:
+///
+/// ```
+/// # use multiref::Pair;
+/// let (mut a, mut b, mut c) = (1, 2, 3);
+/// let mut bc = (&mut b, &mut c);
+/// let mut a_pbc = (&mut a, Pair::new_mut(&mut bc));
+/// let pabc = Pair::new_mut(&mut a_pbc);
+///
+/// *pabc.snd_mut().snd_mut() = 4;
+///
+/// // an alternative (more clumsy) way to do the same thing
+/// *pabc.as_mut().1.as_mut().0 = 5;
+///
+/// assert!(a == 1);
+/// assert!(b == 5);
+/// assert!(c == 4);
+/// ```
+///
+/// A solution facilitating creating such things is due to appear in 
+/// one of the next versions of the crate.
 #[repr(transparent)]
 pub struct Pair<A: ?Sized, B: ?Sized> {
     pair: (*const A, *const B),
@@ -77,8 +99,3 @@ impl<'a, A: ?Sized, B: ?Sized> Pair<A, B> {
         unsafe { &mut *(self as *mut _ as *mut _) }
     }
 }
-
-
-
-
-

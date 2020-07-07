@@ -163,4 +163,5 @@ mod pair;
 mod named_tuple;
 
 pub use pair::Pair;
+pub use slice::Slice;
 
