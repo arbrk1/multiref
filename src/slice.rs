@@ -7,28 +7,44 @@
 /// with the help of [`new`](#method.new) and [`new_mut`](#method.new_mut) 
 /// functions.
 ///
-/// The current version of the crate provides only the distributive laws.
-/// Thus to get a concrete reference (or a sublice) out of the `Slice` 
-/// one has to write
+/// The current version of the crate provides only a minimal viable interface: 
+/// the distributive laws and the [`modify`](#method.modify) method.
+///
+/// To get a concrete reference (or a sublice) out of the `Slice` 
+/// you can write
 ///
 /// ```
 /// # use multiref::Slice;
-/// let (mut a, mut b, mut c) = (1, 2, 3);
-/// let mut array = [&mut a, &mut b, &mut c];
+/// let (mut a, mut b, mut c, mut d) = (1, 2, 3, 4);
+/// let mut array = [&mut a, &mut b, &mut c, &mut d];
 /// let slice = Slice::new_mut(&mut array[..]);
 ///
 /// // Very clumsy but works!
 /// *slice.as_mut()[0] = 4;
 /// *((&mut slice.as_mut()[1..3])[0]) = 5;
 ///
+/// // Continuation-passing style is a little more convenient:
+/// let forty_two = slice.modify(|real_slice| { *real_slice[2] = 6; 42 });
+/// assert!(forty_two == 42);
+///
+/// // Modifications can be chained:
+/// slice.modify(|real_slice| {
+///     *real_slice[3] += 1;
+///     Slice::new_mut(real_slice)
+/// }).modify(|real_slice| { 
+///     *real_slice[3] += 2; 
+/// });
+///
 /// assert!(a == 4);
 /// assert!(b == 5);
-/// assert!(c == 3);
+/// assert!(c == 6);
+/// assert!(d == 7);
 /// ```
 ///
-/// Next versions of the crate are expected to fix this by providing 
-/// an interface analogous to the slice one (unfortunately, `Deref` 
-/// can't be implemented, because of the necessary &-head of the type). 
+/// Next versions of the crate are expected to provide
+/// an interface analogous to the one of standard slices (unfortunately, 
+/// the lazy solution, i.e. implementing the `Deref` trait,
+/// can't be used, because of the necessary &-head of the type). 
 #[repr(transparent)]
 pub struct Slice<T: ?Sized> {
     _slice: [*const T],
@@ -69,5 +85,12 @@ impl<'a, T: ?Sized> Slice<T> {
     /// The original slice, mutable version.
     pub fn as_mut(&'a mut self) -> &'a mut [&'a mut T] {
         unsafe { &mut *(self as *mut _ as *mut _) }
+    }
+
+    /// Provides an access to the underlying slice of references via CPS.
+    pub fn modify<R, F>(&'a mut self, f: F) -> R where
+        F: FnOnce(&'a mut[&'a mut T]) -> R
+    {
+        f(self.as_mut())
     }
 }

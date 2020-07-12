@@ -18,16 +18,19 @@
 ///
 /// *pabc.snd_mut().snd_mut() = 4;
 ///
-/// // an alternative (more clumsy) way to do the same thing
+/// // an alternative (more clumsy) way to do the same (modulo indices) thing
 /// *pabc.as_mut().1.as_mut().0 = 5;
 ///
-/// assert!(a == 1);
+/// // and in continuation-passing style:
+/// pabc.modify(|a_pbc| { *a_pbc.0 = 6; });
+///
+/// assert!(a == 6);
 /// assert!(b == 5);
 /// assert!(c == 4);
 /// ```
 ///
-/// A solution facilitating creating such things is due to appear in 
-/// one of the next versions of the crate.
+/// A solution facilitating working with more than two values is due to appear 
+/// in one of the next versions of the crate.
 #[repr(transparent)]
 pub struct Pair<A: ?Sized, B: ?Sized> {
     pair: (*const A, *const B),
@@ -97,5 +100,12 @@ impl<'a, A: ?Sized, B: ?Sized> Pair<A, B> {
     /// Thus this method is much more useful than [`as_ref`](#method.as_ref).
     pub fn as_mut(&'a mut self) -> &'a mut (&'a mut A, &'a mut B) {
         unsafe { &mut *(self as *mut _ as *mut _) }
+    }
+
+    /// Provides an access to the underlying pair of references via CPS.
+    pub fn modify<R, F>(&'a mut self, f: F) -> R where
+        F: FnOnce(&'a mut (&'a mut A, &'a mut B)) -> R
+    {
+        f(self.as_mut())
     }
 }
