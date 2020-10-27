@@ -2,6 +2,8 @@
 ///
 /// Available only through a (possibly mutable) reference.
 ///
+/// ## Usage
+///
 /// Can be created from (a (possibly mutable) reference to) a slice 
 /// of (possibly mutable) references by means of the `From` trait or 
 /// with the help of [`new`](#method.new) and [`new_mut`](#method.new_mut) 

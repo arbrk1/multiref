@@ -57,6 +57,7 @@ However it has nothing to do with the distributive laws.
 
 ## Versions
 
+* `0.1.2`: fixed a soundness issue with pairs
 * `0.1.1`: `modify` methods for pairs and &#8220;slices&#8221;.
 * `0.1.0`: Initial version.
 

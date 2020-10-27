@@ -1,6 +1,6 @@
 [package]
 name = "multiref"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["arbrk1 <arbrk1@gmail.com>"]
 edition = "2018"
 description = "Multireferences: a safe way to do [&T] -> &[T]"

@@ -153,8 +153,8 @@
 //!
 //! ## Warning
 //!
-//! This crate uses some `unsafe` code. I believe it to be sound, but
-//! it may not be the case.
+//! This crate uses some `unsafe` code with questionable soundness. It seems 
+//! that this code is sound if DST are sound, but it may not be the case.
 
 
 #![no_std]
